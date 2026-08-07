@@ -1,0 +1,25 @@
+[project]
+name = "harness-workshop-04-orchestrator"
+version = "0.1.0"
+description = "Workshop 4 — Orchestrator: a lead agent fans work out to parallel workers on LangGraph + deepagents."
+requires-python = ">=3.11"
+dependencies = [
+    "langchain>=1.3",
+    "langchain-anthropic>=1.5",
+    "langgraph>=1.2",
+    "deepagents>=0.7",
+    "python-dotenv>=1.2",
+]
+
+# Tool the *seeded sandbox* needs so the worker agents can run their tests — NOT a
+# dep of the orchestrator itself. Kept in its own group so the orchestrator's own
+# dependency list stays honest. default-groups installs it on a plain `uv sync`.
+[dependency-groups]
+sandbox = [
+    "pytest>=9.0",
+]
+
+# Not a package — just an app whose code lives in src/. uv manages the env only.
+[tool.uv]
+package = false
+default-groups = ["sandbox"]
