@@ -1,6 +1,6 @@
 """Shared config: where the sandbox is, and which model runs each role.
 
-WS4 is back on the LangChain ecosystem WS2 used — langchain-anthropic for the
+WS4 is back on the LangChain stack WS2 used — langchain-anthropic for the
 model binding, langgraph for the orchestration graph, deepagents for the
 shortcut. So auth is an `ANTHROPIC_API_KEY` in the environment (see
 .env.example), not the subscription-token path WS3's stock harnesses inherited.

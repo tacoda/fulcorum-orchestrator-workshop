@@ -1,4 +1,4 @@
-# Workshop 4 — Take-Home: Make the Orchestrator Robust
+# Workshop 4 — Take-Home: Harden the Orchestrator
 
 The workshop orchestrator fans out to a handful of workers, isolates them, and
 merges their reports. This is the gap to something that coordinates real parallel

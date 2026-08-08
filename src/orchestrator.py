@@ -156,8 +156,9 @@ def run(task: str) -> str:
 if __name__ == "__main__":
     import sys
 
-    default = ("Add pytest tests covering every function in each module under the "
-               "sandbox: math_ops.py, str_ops.py, list_ops.py. One test file per "
-               "module. Do not modify the modules themselves.")
+    default = ("Write a pytest suite for the sandbox library: one test file per "
+               "module (math_ops.py, str_ops.py, list_ops.py), covering every "
+               "function and its edge cases — empty inputs, boundary values, and "
+               "the errors each function raises. Do not modify the modules.")
     task = sys.argv[1] if len(sys.argv) > 1 else default
     print("\n=== ORCHESTRATOR SUMMARY ===\n" + run(task))

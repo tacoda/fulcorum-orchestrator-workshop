@@ -7,7 +7,7 @@
 > that decides at runtime how the work splits, N **worker** agents that run that
 > split **concurrently**, and a **synthesizer** that merges what comes back. The
 > factory is the N=1, fixed-order special case; this is the tree. You build it by
-> hand on **LangGraph** (the same ecosystem WS2 used), then collapse it into a
+> hand on **LangGraph** (the same stack WS2 used), then collapse it into a
 > dozen lines with **deepagents** — build the mechanism, then see the shortcut.
 
 ## What an orchestrator is (and how it differs from the factory)
@@ -23,7 +23,8 @@ govern them. The difference is shape:
   at runtime, not wired in advance.
 
 The factory *is* an orchestrator in its simplest useful shape. This workshop
-builds the shape the factory left out: **concurrency and dynamic fan-out**.
+builds the shape the factory left out: **concurrency, and a fan-out whose width the
+lead picks at runtime**.
 
 ## Duration
 
@@ -31,7 +32,7 @@ builds the shape the factory left out: **concurrency and dynamic fan-out**.
 
 ## Prerequisites
 
-- **WS2's ecosystem in your hands.** You've built a LangGraph graph before —
+- **WS2's stack in your hands.** You've built a LangGraph graph before —
   nodes, edges, a `TypedDict` state. WS4 adds the fan-out primitive (`Send`) and a
   reducer for fan-in.
 - Comfortable with the idea that N things run at once and finish in any order, and
@@ -41,7 +42,7 @@ builds the shape the factory left out: **concurrency and dynamic fan-out**.
 
 ## Dependencies
 
-Back on the LangChain ecosystem WS2 used — no Claude Agent SDK here (that was WS3).
+Back on the LangChain stack WS2 used — no Claude Agent SDK here (that was WS3).
 
 | Need | Why |
 |---|---|
@@ -69,12 +70,10 @@ cd 04-orchestrator
 uv sync                       # creates .venv and installs from pyproject.toml
 cp .env.example .env          # set ANTHROPIC_API_KEY; leave MAX_SUBTASKS=5
 
-# Seed a sandbox with a few independent modules so the lead has something to split.
-mkdir -p src/sandbox && (cd src/sandbox && git init -q \
-  && printf 'def add(a, b):\n    return a + b\n\ndef mul(a, b):\n    return a * b\n' > math_ops.py \
-  && printf 'def shout(s):\n    return s.upper()\n\ndef reverse(s):\n    return s[::-1]\n' > str_ops.py \
-  && printf 'def head(xs):\n    return xs[0]\n\ndef tail(xs):\n    return xs[1:]\n' > list_ops.py \
-  && git add -A && git commit -qm seed)
+# The sandbox library (three independent modules) ships in src/sandbox/. Make it
+# its own git repo so each worker can branch a worktree from a clean HEAD.
+git -C src/sandbox init -q
+git -C src/sandbox add -A && git -C src/sandbox commit -qm seed
 
 uv run python src/orchestrator.py   # decompose → parallel workers → one summary
 ```
@@ -113,8 +112,8 @@ START → decompose ┼─► worker (worktree 2) ─┼─► synthesize → EN
 
 By the end you can:
 
-1. Say what an orchestrator adds over a factory — dynamic fan-out and concurrency
-   — and why the factory is its N=1, fixed-order special case.
+1. Say what an orchestrator adds over a factory — fan-out and concurrency, with N
+   decided at runtime — and why the factory is its N=1, fixed-order special case.
 2. Fan out to N workers with LangGraph's `Send`, and fan back in with a reducer
    (`Annotated[list, operator.add]`), passing per-worker state that differs from
    the graph's.

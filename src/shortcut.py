@@ -53,5 +53,6 @@ def run(task: str) -> str:
 if __name__ == "__main__":
     import sys
 
-    default = "Add pytest tests for every function in math_ops.py, str_ops.py, and list_ops.py."
+    default = ("Write a pytest suite covering every function and its edge cases in "
+               "math_ops.py, str_ops.py, and list_ops.py — one test file per module.")
     print(run(sys.argv[1] if len(sys.argv) > 1 else default))

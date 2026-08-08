@@ -45,7 +45,8 @@ three questions the line never had to:
 - **What if one fails?** — the others still finished; the run must survive it.
 
 The factory *is* an orchestrator in its simplest shape (N=1, fixed order). This
-workshop builds the shape it left out: dynamic fan-out and concurrency. Everything
+workshop builds the shape it left out: fan-out and concurrency, N decided at
+runtime. Everything
 else — the levers from WS1, the meta-harness framing from WS3 — carries over
 unchanged. What's new is that the units being managed are *agents*, not tools or
 stages, and they run in parallel.
@@ -57,7 +58,7 @@ stages, and they run in parallel.
 
 ## Segment 1 — The lead: decompose a task at runtime (0:15–0:55)
 
-### 1.1 — The state (12 min)
+### 1.1 — The state (10 min)
 
 The orchestrator's memory is a LangGraph `TypedDict` — but the interesting field
 is the one with a **reducer**:
@@ -75,7 +76,7 @@ class OrchestratorState(TypedDict):
 overwriting — that single annotation is the entire fan-in mechanism. Point at it
 now; you'll rely on it in Segment 3.
 
-### 1.2 — The decompose node (23 min)
+### 1.2 — The decompose node (22 min)
 
 The LEAD is one smart-model call whose whole job is to split the work. The charter
 is the contract: independent subtasks, JSON only.
@@ -101,7 +102,7 @@ Two things to land:
   stops it proposing thirty subtasks. The cap is the first bound, before isolation,
   before anything. Fan-out with no cap is a way to spawn thirty agents by accident.
 
-### 1.3 — Parse the split (10 min)
+### 1.3 — Parse the split (8 min)
 
 `_parse_subtasks` does `json.loads`, and if the lead wrapped the array in prose,
 digs the `[...]` out with a regex. Same lesson as WS3's verdict parse: when the
